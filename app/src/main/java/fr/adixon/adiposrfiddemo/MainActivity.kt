@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var buttonBindService: Button? = null
     private var buttonUnBindService: Button? = null
     private var buttonGetRandomNumber: Button? = null
+    private var buttonStartService: Button? = null
+    private var buttonStopService: Button? = null
 
     internal inner class RecieveRandomNumberHandler : Handler() {
         override fun handleMessage(msg: Message) {
@@ -56,12 +58,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
         mContext = applicationContext
         textViewRandomNumber = findViewById<TextView>(R.id.textViewRandomNumber)
+
         buttonBindService = findViewById<Button>(R.id.buttonBindService)
         buttonUnBindService = findViewById<Button>(R.id.buttonUnBindService)
         buttonGetRandomNumber = findViewById<Button>(R.id.buttonGetRandomNumber)
+        buttonStartService = findViewById<Button>(R.id.buttonStartService)
+        buttonStopService = findViewById<Button>(R.id.buttonStopService)
+
         buttonGetRandomNumber?.setOnClickListener(this)
         buttonBindService?.setOnClickListener(this)
         buttonUnBindService?.setOnClickListener(this)
+        buttonStartService?.setOnClickListener(this)
+        buttonStopService?.setOnClickListener(this)
+
         serviceIntent = Intent()
         serviceIntent!!.component = ComponentName("fr.adixon.adiposrfid", "fr.adixon.adiposrfid.MyService")
     }
@@ -71,6 +80,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.buttonBindService -> bindToRemoteService()
             R.id.buttonUnBindService -> unbindFromRemoteSevice()
             R.id.buttonGetRandomNumber -> fetchRandomNumber()
+            R.id.buttonStartService -> startMyService()
+            R.id.buttonStopService -> stopMyService()
             else -> {}
         }
     }
@@ -105,6 +116,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         randomNumberServiceConnection = null
+    }
+
+    private fun startMyService() {
+        startService(serviceIntent);
+        Toast.makeText(mContext, "Service Started", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun stopMyService() {
+        stopService(serviceIntent);
+        Toast.makeText(mContext, "Service Stopped", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
