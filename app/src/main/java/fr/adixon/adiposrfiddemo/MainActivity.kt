@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun bindToRemoteService() {
         randomNumberServiceConnection?.let { bindService(serviceIntent, it, BIND_AUTO_CREATE) }
         Toast.makeText(mContext, "Service bound", Toast.LENGTH_SHORT).show()
-        mIsBound = true;
     }
 
     private fun unbindFromRemoteSevice() {
