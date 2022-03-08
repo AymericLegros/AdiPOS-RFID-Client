@@ -103,7 +103,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             println("------------ bindToRemoteService ------------")
             bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE)
             registerReceiver(receiver, IntentFilter("fr.adixon.adiposrfid.MyService.BROADCAST_ACTION"));
-            startService(serviceIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent)
+            } else {
+                startService(serviceIntent)
+            };
             bound = true
             Toast.makeText(mContext, "Service bound", Toast.LENGTH_SHORT).show()
         }
