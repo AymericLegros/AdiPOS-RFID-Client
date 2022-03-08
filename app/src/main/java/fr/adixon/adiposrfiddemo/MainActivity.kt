@@ -8,13 +8,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+private const val MSG_SAY_HELLO = 0
+private const val RFID_START = 1
+private const val RFID_TERMINATE = 2
+private const val RFID_CONNECTOR_STATUS = 3
+private const val RFID_SCAN = 4
+
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var mContext: Context? = null
+    private var mService: Messenger? = null
     private var bound = false
     private var serviceIntent: Intent? = null
+    
     private var textViewRandomNumber: TextView? = null
+    
     private var buttonBindService: Button? = null
     private var buttonUnBindService: Button? = null
+    private var buttonHello: Button? = null
+    private var buttonScan: Button? = null
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -31,15 +42,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private var mConnection = object : ServiceConnection {
-        
+
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             println("----------- onServiceConnected -----------")
+            mService = Messenger(service)
             bound = true
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
             println("----------- onServiceDisconnected -----------")
+            mService = null
             bound = false
+        }
+    }
+
+    private fun sendMessageToService(msgCode: Int) {
+        if (!bound) return
+        // Create and send a message to the service, using a supported 'what' value
+        val msg: Message = Message.obtain(null, msgCode, 0, 0)
+        try {
+            mService?.send(msg)
+        } catch (e: RemoteException) {
+            e.printStackTrace()
         }
     }
 
@@ -47,13 +71,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mContext = applicationContext
-        textViewRandomNumber = findViewById<TextView>(R.id.textViewRandomNumber)
 
-        buttonBindService = findViewById<Button>(R.id.buttonBindService)
-        buttonUnBindService = findViewById<Button>(R.id.buttonUnBindService)
+        textViewRandomNumber = findViewById(R.id.textViewRandomNumber)
+
+        buttonBindService = findViewById(R.id.buttonBindService)
+        buttonUnBindService = findViewById(R.id.buttonUnBindService)
+        buttonHello = findViewById(R.id.buttonHello)
+        buttonScan = findViewById(R.id.buttonScan)
 
         buttonBindService?.setOnClickListener(this)
         buttonUnBindService?.setOnClickListener(this)
+        buttonHello?.setOnClickListener(this)
+        buttonScan?.setOnClickListener(this)
 
         serviceIntent = Intent()
         serviceIntent!!.component = ComponentName("fr.adixon.adiposrfid", "fr.adixon.adiposrfid.MyService")
@@ -62,7 +91,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.buttonBindService -> bindToRemoteService()
-            R.id.buttonUnBindService -> unbindFromRemoteSevice()
+            R.id.buttonUnBindService -> unbindFromRemoteService()
+            R.id.buttonHello -> sendMessageToService(MSG_SAY_HELLO)
+            R.id.buttonScan -> sendMessageToService(RFID_SCAN)
             else -> {}
         }
     }
@@ -78,9 +109,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun unbindFromRemoteSevice() {
+    private fun unbindFromRemoteService() {
         if (bound) {
-            println("------------ unbindFromRemoteSevice ------------")
+            println("------------ unbindFromRemoteService ------------")
             stopService(serviceIntent)
             unregisterReceiver(receiver)
             unbindService(mConnection)

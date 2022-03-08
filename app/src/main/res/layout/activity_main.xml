@@ -10,10 +10,19 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewRandomNumber"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewRFIDConnectionState"
         android:textSize="16sp"
         android:gravity="center"
         android:text="" />
@@ -29,4 +38,22 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonUnBindService"
         android:text="Unbind Service"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonHello"
+        android:text="Hello!"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonScan"
+        android:text="Scan"/>
 </LinearLayout>
