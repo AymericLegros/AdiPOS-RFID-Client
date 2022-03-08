@@ -36,14 +36,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonUnBindService"
-        android:text="Unbind Service"/>
+        android:id="@+id/buttonInitService"
+        android:text="Init Service"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Message" />
 
     <Button
         android:layout_width="match_parent"
@@ -56,4 +51,17 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonScan"
         android:text="Scan"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonTerminateService"
+        android:text="Terminate Service"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonUnBindService"
+        android:text="Unbind Service"/>
+
 </LinearLayout>

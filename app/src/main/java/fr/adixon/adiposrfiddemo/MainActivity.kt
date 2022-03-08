@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 private const val MSG_SAY_HELLO = 0
-private const val RFID_START = 1
+private const val RFID_INIT = 1
 private const val RFID_TERMINATE = 2
 private const val RFID_CONNECTOR_STATUS = 3
 private const val RFID_SCAN = 4
@@ -21,8 +21,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var serviceIntent: Intent? = null
     
     private var textViewRandomNumber: TextView? = null
-    
+
     private var buttonBindService: Button? = null
+    private var buttonInitService: Button? = null
+    private var buttonTerminateService: Button? = null
     private var buttonUnBindService: Button? = null
     private var buttonHello: Button? = null
     private var buttonScan: Button? = null
@@ -75,11 +77,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         textViewRandomNumber = findViewById(R.id.textViewRandomNumber)
 
         buttonBindService = findViewById(R.id.buttonBindService)
+        buttonInitService = findViewById(R.id.buttonInitService)
+        buttonTerminateService = findViewById(R.id.buttonTerminateService)
         buttonUnBindService = findViewById(R.id.buttonUnBindService)
         buttonHello = findViewById(R.id.buttonHello)
         buttonScan = findViewById(R.id.buttonScan)
 
         buttonBindService?.setOnClickListener(this)
+        buttonInitService?.setOnClickListener(this)
+        buttonTerminateService?.setOnClickListener(this)
         buttonUnBindService?.setOnClickListener(this)
         buttonHello?.setOnClickListener(this)
         buttonScan?.setOnClickListener(this)
@@ -91,9 +97,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.buttonBindService -> bindToRemoteService()
-            R.id.buttonUnBindService -> unbindFromRemoteService()
+            R.id.buttonInitService -> sendMessageToService(RFID_INIT)
             R.id.buttonHello -> sendMessageToService(MSG_SAY_HELLO)
             R.id.buttonScan -> sendMessageToService(RFID_SCAN)
+            R.id.buttonTerminateService -> sendMessageToService(RFID_TERMINATE)
+            R.id.buttonUnBindService -> unbindFromRemoteService()
             else -> {}
         }
     }
