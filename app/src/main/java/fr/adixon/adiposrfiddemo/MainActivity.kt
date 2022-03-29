@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         buttonScanStop?.setOnClickListener(this)
 
         serviceIntent = Intent()
-        serviceIntent!!.component = ComponentName("fr.adixon.adiposrfid", "fr.adixon.adiposrfid.MyService")
+        serviceIntent!!.component = ComponentName("fr.adixon.adiposrfid", "fr.adixon.adiposrfid.RFIDService")
     }
 
     override fun onClick(view: View) {
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (!bound) {
             println("------------ bindToRemoteService ------------")
             bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE)
-            registerReceiver(receiver, IntentFilter("fr.adixon.adiposrfid.MyService.BROADCAST_ACTION"));
+            registerReceiver(receiver, IntentFilter("fr.adixon.adiposrfid.RFIDService.BROADCAST_ACTION"));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(serviceIntent)
             } else {
