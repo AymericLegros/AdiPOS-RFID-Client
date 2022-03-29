@@ -10,23 +10,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewRandomNumber"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:text="" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewRFIDConnectionState"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:text="" />
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,8 +32,14 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonScan"
-        android:text="Scan"/>
+        android:id="@+id/buttonScanStart"
+        android:text="Start scan"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonScanStop"
+        android:text="Stop scan"/>
 
     <Button
         android:layout_width="match_parent"
@@ -63,5 +52,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonUnBindService"
         android:text="Unbind Service"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tag_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
