@@ -13,14 +13,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonBindService"
-        android:text="Bind Service"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonInitService"
-        android:text="Init Service"/>
+        android:id="@+id/buttonStartScan"
+        android:text="Start Scan"/>
 
 
     <Button
@@ -32,26 +26,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonScanStart"
-        android:text="Start scan"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonScanStop"
-        android:text="Stop scan"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonTerminateService"
-        android:text="Terminate Service"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonUnBindService"
-        android:text="Unbind Service"/>
+        android:id="@+id/buttonStopScan"
+        android:text="Stop Scan"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tag_list"

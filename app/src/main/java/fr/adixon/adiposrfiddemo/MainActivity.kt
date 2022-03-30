@@ -4,16 +4,12 @@ import android.content.*
 import android.os.*
 import android.view.View
 import android.widget.Button
-import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import fr.adixon.adiposrfid.RFIDTag
 
 
-private const val MSG_SAY_HELLO = 0
+private const val RFID_HELLO = 0
 private const val RFID_INIT = 1
 private const val RFID_TERMINATE = 2
 private const val RFID_CONNECTOR_STATUS = 3
@@ -29,16 +25,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var bound = false
     private var serviceIntent: Intent? = null
 
-    // private var listView: ListView? = null
-    private var buttonBindService: Button? = null
-    private var buttonInitService: Button? = null
-    private var buttonTerminateService: Button? = null
-    private var buttonUnBindService: Button? = null
     private var buttonHello: Button? = null
-    private var buttonScanStart: Button? = null
-    private var buttonScanStop: Button? = null
+    private var buttonStartScan: Button? = null
+    private var buttonStopScan: Button? = null
 
-    private var tags: ArrayList<RFIDTag> = arrayListOf();
+    private var tags: ArrayList<String> = arrayListOf();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,21 +42,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
-        buttonBindService = findViewById(R.id.buttonBindService)
-        buttonInitService = findViewById(R.id.buttonInitService)
-        buttonTerminateService = findViewById(R.id.buttonTerminateService)
-        buttonUnBindService = findViewById(R.id.buttonUnBindService)
         buttonHello = findViewById(R.id.buttonHello)
-        buttonScanStart = findViewById(R.id.buttonScanStart)
-        buttonScanStop = findViewById(R.id.buttonScanStop)
+        buttonStartScan = findViewById(R.id.buttonStartScan)
+        buttonStopScan = findViewById(R.id.buttonStopScan)
 
-        buttonBindService?.setOnClickListener(this)
-        buttonInitService?.setOnClickListener(this)
-        buttonTerminateService?.setOnClickListener(this)
-        buttonUnBindService?.setOnClickListener(this)
         buttonHello?.setOnClickListener(this)
-        buttonScanStart?.setOnClickListener(this)
-        buttonScanStop?.setOnClickListener(this)
+        buttonStartScan?.setOnClickListener(this)
+        buttonStopScan?.setOnClickListener(this)
 
         serviceIntent = Intent()
         serviceIntent!!.component = ComponentName("fr.adixon.adiposrfid", "fr.adixon.adiposrfid.RFIDService")
@@ -73,26 +56,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.buttonBindService -> bindToRemoteService()
-            R.id.buttonInitService -> sendMessageToService(RFID_INIT)
-            R.id.buttonHello -> sendMessageToService(MSG_SAY_HELLO)
-            R.id.buttonScanStart -> sendMessageToService(RFID_SCAN_START)
-            R.id.buttonScanStop -> sendMessageToService(RFID_SCAN_STOP)
-            R.id.buttonTerminateService -> sendMessageToService(RFID_TERMINATE)
-            R.id.buttonUnBindService -> unbindFromRemoteService()
+            R.id.buttonStartScan -> bindToRemoteService()
+            R.id.buttonHello -> sendMessageToService(RFID_HELLO)
+            R.id.buttonStopScan -> unbindFromRemoteService()
             else -> {}
         }
     }
 
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val data = intent.getParcelableArrayListExtra<RFIDTag>("fr.adixon.adiposrfid.AllTags")
-            println(data);
+            val data = intent.getStringArrayListExtra("fr.adixon.adiposrfid.AllTags")
             tags.clear();
-
-            val newTags = data as ArrayList<RFIDTag>
+            val newTags = data as ArrayList<String>
             tags.addAll(newTags)
-
             adapter.notifyDataSetChanged();
         }
     }
@@ -123,51 +99,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
     private fun bindToRemoteService() {
         if (!bound) {
             println("------------ bindToRemoteService ------------")
             bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE)
-            registerReceiver(receiver, IntentFilter("fr.adixon.adiposrfid.RFIDService.BROADCAST_ACTION"));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(serviceIntent)
-            } else {
-                startService(serviceIntent)
-            };
-            bound = true
-            Toast.makeText(mContext, "Service bound", Toast.LENGTH_SHORT).show()
+            registerReceiver(receiver, IntentFilter("fr.adixon.adiposrfid.RFIDService.BROADCAST_ACTION"))
         }
     }
 
     private fun unbindFromRemoteService() {
         if (bound) {
             println("------------ unbindFromRemoteService ------------")
-            stopService(serviceIntent)
-            unregisterReceiver(receiver)
-            unbindService(mConnection)
-            bound = false
-            Toast.makeText(mContext, "Service Unbound", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        println("--------- onStop ----------")
-        // Unbind from the service
-        if (bound) {
-            stopService(serviceIntent)
-            unregisterReceiver(receiver)
-            unbindService(mConnection)
-            bound = false
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        println("--------- onDestroy ----------")
-        // Unbind from the service
-        if (bound) {
-            stopService(serviceIntent)
             unregisterReceiver(receiver)
             unbindService(mConnection)
             bound = false

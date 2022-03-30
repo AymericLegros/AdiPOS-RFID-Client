@@ -5,13 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import fr.adixon.adiposrfid.RFIDTag
 
-class RFIDTagAdapter(val tags: List<RFIDTag>)
+class RFIDTagAdapter(val tags: List<String>)
     : RecyclerView.Adapter<RFIDTagAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tagCode: TextView = itemView.findViewById(R.id.tag_item)
+        val tag: TextView = itemView.findViewById(R.id.tag_item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,7 +20,7 @@ class RFIDTagAdapter(val tags: List<RFIDTag>)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tag = tags[position]
         holder.itemView.tag = position
-        holder.tagCode.text = tag.code
+        holder.tag.text = tag
     }
 
     override fun getItemCount(): Int {
